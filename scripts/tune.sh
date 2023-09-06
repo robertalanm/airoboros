@@ -12,14 +12,15 @@
 
         # --num_train_epochs $EPOCH \
 
-experts=("arxiv" "book" "c4" "common_crawl" "github" "stackexchange" "wikipedia" "openwebtext")
+# experts=("arxiv" "book" "c4" "common_crawl" "github" "stackexchange" "wikipedia" "openwebtext")
+experts=("empathetic" "lima" "platypus" "wyvern")
 
 export MODEL_SIZE=$1
 export BATCH_SIZE=$2
 EPOCH=3
 export BASE_DIR=/home/paperspace/airoboros
 export WANDB_API_KEY=f71f8e9c9ab92fe38b3e592042d30163d3449bbb
-export WANDB_PROJECT=lilith-lmoe-$MODEL_SIZE-v120rev2
+export WANDB_PROJECT=sybil-180b-v010
 
 rm -rf $BASE_DIR/experts/$WANDB_PROJECT
 rm -rf $BASE_DIR/$WANDB_PROJECT
@@ -33,16 +34,17 @@ for EXPERT in "${experts[@]}"; do
     export WANDB_NAME=$EXPERT-$EPOCH
 
     accelerate launch qlora/qlora.py \
-        --model_name_or_path NousResearch/Yarn-Llama-2-7b-128k \
+        --model_name_or_path tiiuae/falcon-180B-chat \
         --output_dir $BASE_DIR/experts/$WANDB_PROJECT/$EXPERT \
         --logging_steps 1 \
+        --num_train_epochs $EPOCH \
         --save_strategy steps \
         --save_steps 100 \
         --save_total_limit 1 \
         --data_seed 11422 \
         --evaluation_strategy no \
         --eval_dataset_size 2 \
-        --max_new_tokens 4096 \
+        --max_new_tokens 1024 \
         --dataloader_num_workers 3 \
         --logging_strategy steps \
         --remove_unused_columns False \
@@ -53,13 +55,12 @@ for EXPERT in "${experts[@]}"; do
         --bf16 \
         --bits 4 \
         --double_quant \
-        --max_steps 100 \
         --quant_type nf4 \
         --warmup_ratio 0.03 \
         --lr_scheduler_type constant \
-        --dataset bass/training_data/highest_scoring_$EXPERT.jsonl \
+        --dataset sybil/training_data/highest_scoring_$EXPERT.jsonl \
         --dataset_format airoboros \
-        --model_max_len 16384 \
+        --model_max_len 2048 \
         --per_device_train_batch_size $BATCH_SIZE \
         --learning_rate 0.0003 \
         --adam_beta2 0.999 \
@@ -77,5 +78,5 @@ for EXPERT in "${experts[@]}"; do
 
 done
 
-cp $BASE_DIR/bass/training_data -r $BASE_DIR/$WANDB_PROJECT/training_data
-cp $BASE_DIR/bass/routing_data -r $BASE_DIR/$WANDB_PROJECT/routing_data
+cp $BASE_DIR/sybil/training_data -r $BASE_DIR/$WANDB_PROJECT/training_data
+cp $BASE_DIR/sybil/routing_data -r $BASE_DIR/$WANDB_PROJECT/routing_data
