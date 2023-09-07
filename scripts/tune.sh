@@ -20,7 +20,7 @@ export BATCH_SIZE=$2
 EPOCH=3
 export BASE_DIR=/home/paperspace/airoboros
 export WANDB_API_KEY=f71f8e9c9ab92fe38b3e592042d30163d3449bbb
-export WANDB_PROJECT=sybil-180b-v010
+export WANDB_PROJECT=sybil-70b-v010
 
 rm -rf $BASE_DIR/experts/$WANDB_PROJECT
 rm -rf $BASE_DIR/$WANDB_PROJECT
