@@ -49,8 +49,8 @@ for EXPERT in "${experts[@]}"; do
         --logging_strategy steps \
         --remove_unused_columns False \
         --do_train \
-        --lora_r 64 \
-        --lora_alpha 16 \
+        --lora_r 32 \
+        --lora_alpha 8 \
         --lora_modules all \
         --bf16 \
         --bits 4 \
