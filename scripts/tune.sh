@@ -71,7 +71,8 @@ for EXPERT in "${experts[@]}"; do
         --report_to wandb \
         --gradient_checkpointing True \
         --ddp_find_unused_parameters False \
-        --trust_remote_code True
+        --trust_remote_code True \
+        --use_auth_token True
 
         mkdir $BASE_DIR/$WANDB_PROJECT/adapters/$EXPERT
         cp $BASE_DIR/experts/$WANDB_PROJECT/$EXPERT/checkpoint-$EPOCH/adapter_model/* -r $BASE_DIR/$WANDB_PROJECT/adapters/$EXPERT
