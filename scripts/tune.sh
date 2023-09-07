@@ -34,7 +34,7 @@ for EXPERT in "${experts[@]}"; do
     export WANDB_NAME=$EXPERT-$EPOCH
 
     accelerate launch qlora/qlora.py \
-        --model_name_or_path tiiuae/falcon-180B-chat \
+        --model_name_or_path garage-bAInd/Platypus2-70B-instruct \
         --output_dir $BASE_DIR/experts/$WANDB_PROJECT/$EXPERT \
         --logging_steps 1 \
         --num_train_epochs $EPOCH \
@@ -49,8 +49,8 @@ for EXPERT in "${experts[@]}"; do
         --logging_strategy steps \
         --remove_unused_columns False \
         --do_train \
-        --lora_r 32 \
-        --lora_alpha 8 \
+        --lora_r 64 \
+        --lora_alpha 16 \
         --lora_modules all \
         --bf16 \
         --bits 4 \
